@@ -36,13 +36,19 @@ for my $code (@{$config->{codes}}) {
     #say $tx->success->body;
 
     $dom = $tx->res->dom;
+
+    my $alcohol_name = '';
+    if ($dom->at('#ContentPlaceHolderBody_lblDesc')) {
+        $alcohol_name = $dom->at('#ContentPlaceHolderBody_lblDesc')->all_text;
+    }
+
     my $rows = $dom->find('tr.gridViewRow');
 
     my $qty = 0;
     for my $row (@$rows) {
-        $qty += $row->at('span')->content;
+        $qty += $row->at('span')->all_text;
     }
-    say "$code - $qty";
+    say "$alcohol_name - $code - $qty";
 }
 
 
