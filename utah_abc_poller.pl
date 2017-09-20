@@ -12,6 +12,8 @@ my $opts = {};
 GetOptions(
     $opts,
     'quiet|q',
+    'debug|d',
+    'exclude_club_stores',
 );
 
 if(@ARGV) {
@@ -44,7 +46,7 @@ for my $code (@{$config->{codes}}) {
     $names{'ctl00$ContentPlaceHolderBody$tbCscCode'} = $code;
     $tx = $ua->post($config->{url} => form => \%names);
 
-    #say $tx->success->body;
+    say $tx->success->body if($opts->{debug});
 
     $dom = $tx->res->dom;
 
@@ -56,15 +58,20 @@ for my $code (@{$config->{codes}}) {
     my $rows = $dom->find('tr.gridViewRow');
 
     my $qty = 0;
+    my @stores;
     for my $row (@$rows) {
+        my $store = $row->child_nodes->[2]->all_text . ', ' . $row->child_nodes->[4]->all_text . ', ' . $row->child_nodes->[5]->all_text;
+        next if($opts->{'exclude_club_stores'} && $store =~ /Club Store/i);
         $qty += $row->at('span')->all_text;
+        push(@stores, $store);
     }
-    say "$alcohol_name - $code - $qty" if($qty || !$opts->{'quiet'});
+    my $stores_str = join(' | ', @stores);
+    say "$alcohol_name - $code - $qty - $stores_str" if($qty || !$opts->{'quiet'});
 }
 
 
 sub USAGE {
-    die "USAGE: $0 [-q|-quiet]";
+    die "USAGE: $0 [--quiet] [--debug] [--exclude_club_stores]";
 }
 
 
