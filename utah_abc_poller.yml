@@ -1,6 +1,5 @@
 url: https://webapps2.abc.utah.gov/Production/OnlineInventoryQuery/IQ/InventoryQuery.aspx
 codes:
-  - 017090
   - 920561
   - 021540
   - 018416
@@ -14,7 +13,9 @@ codes:
   - 017923
   - 017925
   - 018361
-  - 005440
   - 005437
-  - 005447
-  - 005430
+  - 021602
+  - 021589
+  - 021603
+  - 021605
+  - 021600
