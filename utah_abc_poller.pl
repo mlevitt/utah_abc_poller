@@ -6,6 +6,17 @@ use Mojo::UserAgent;
 use Mojo::UserAgent::Transactor;
 use Mojo::DOM;
 use YAML;
+use Getopt::Long;
+
+my $opts = {};
+GetOptions(
+    $opts,
+    'quiet|q',
+);
+
+if(@ARGV) {
+    USAGE();
+}
 
 my $ua = Mojo::UserAgent->new();
 my $config = YAML::LoadFile('utah_abc_poller.yml');
@@ -48,8 +59,12 @@ for my $code (@{$config->{codes}}) {
     for my $row (@$rows) {
         $qty += $row->at('span')->all_text;
     }
-    say "$alcohol_name - $code - $qty";
+    say "$alcohol_name - $code - $qty" if($qty || !$opts->{'quiet'});
 }
 
+
+sub USAGE {
+    die "USAGE: $0 [-q|-quiet]";
+}
 
 
