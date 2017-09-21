@@ -14,14 +14,15 @@ GetOptions(
     'quiet|q',
     'debug|d',
     'exclude_club_stores',
+    'config|c=s'
 );
 
-if(@ARGV) {
+if(@ARGV || ! $opts->{'config'} || ! -e $opts->{'config'}) {
     USAGE();
 }
 
 my $ua = Mojo::UserAgent->new();
-my $config = YAML::LoadFile('utah_abc_poller.yml');
+my $config = YAML::LoadFile($opts->{'config'});
 
 my $tx= $ua->get($config->{url});
 
@@ -71,7 +72,7 @@ for my $code (@{$config->{codes}}) {
 
 
 sub USAGE {
-    die "USAGE: $0 [--quiet] [--debug] [--exclude_club_stores]";
+    die "USAGE: $0 --config </path/to/configfile.yml> [--quiet] [--debug] [--exclude_club_stores]";
 }
 
 
