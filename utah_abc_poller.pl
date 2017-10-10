@@ -44,6 +44,7 @@ for my $input (@$inputs) {
 }
 
 for my $code (@{$config->{codes}}) {
+    $code =~ s/\s*#.*//;  # Remove mid line comnents from the codes
     $names{'ctl00$ContentPlaceHolderBody$tbCscCode'} = $code;
     $tx = $ua->post($config->{url} => form => \%names);
 
