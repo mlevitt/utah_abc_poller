@@ -7,6 +7,7 @@ use Mojo::UserAgent::Transactor;
 use Mojo::DOM;
 use YAML;
 use Getopt::Long;
+use HTML::Template;
 
 my $opts = {};
 GetOptions(
@@ -14,6 +15,7 @@ GetOptions(
     'quiet|q',
     'header|h',
     'debug|d',
+    'html|w',
     'exclude_club_stores',
     'config|c=s'
 );
@@ -24,6 +26,8 @@ if(@ARGV || ! $opts->{'config'} || ! -e $opts->{'config'}) {
 
 my $ua = Mojo::UserAgent->new();
 my $config = YAML::LoadFile($opts->{'config'});
+my $html = '';
+my $template = HTML::Template->new(filename => 'html-template.tmpl');
 
 my $tx= $ua->get($config->{url});
 
@@ -45,7 +49,11 @@ for my $input (@$inputs) {
 }
 
 if ($opts->{'header'}) {
-    printf("%-41s- %-7s- %-3s- %s\n", "Company Name", "Code", "QT", "Stores");
+    if ($opts->{'html'}) {
+        $html .= "<tr><td>Company Name</td><td>Code</td><td>QT</td><td>Stores</td></tr>\n";
+    } else {
+        printf("%-41s- %-7s- %-3s- %s\n", "Company Name", "Code", "QT", "Stores");
+    }
 }
 
 for my $code (@{$config->{codes}}) {
@@ -72,10 +80,20 @@ for my $code (@{$config->{codes}}) {
         $qty += $row->at('span')->all_text;
         push(@stores, $store);
     }
-    my $stores_str = join(' | ', @stores);
-    say "$alcohol_name - $code - $qty - $stores_str" if($qty || !$opts->{'quiet'});
+
+    if ($opts->{'html'}) {
+        my $stores_str = join('<br>', @stores);
+        $html .= "<tr><td>$alcohol_name</td><td>$code</td><td>$qty</td><td>$stores_str</td></tr>"; 
+    } else {
+        my $stores_str = join(' | ', @stores);
+        say "$alcohol_name - $code - $qty - $stores_str" if($qty || !$opts->{'quiet'});
+    }
 }
 
+if ($opts->{'html'}) {
+    $template->param(STORES => $html); 
+    say $template->output;
+}
 
 sub USAGE {
     die "USAGE: $0 --config </path/to/configfile.yml> [--quiet] [--debug] [--exclude_club_stores]";
