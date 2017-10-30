@@ -12,6 +12,7 @@ my $opts = {};
 GetOptions(
     $opts,
     'quiet|q',
+    'header|h',
     'debug|d',
     'exclude_club_stores',
     'config|c=s'
@@ -41,6 +42,10 @@ my %names;
 my $inputs = $form->find('input');
 for my $input (@$inputs) {
     $names{$input->attr->{'name'}} = $input->attr->{'value'};
+}
+
+if ($opts->{'header'}) {
+    printf("%-41s- %-7s- %-3s- %s\n", "Company Name", "Code", "QT", "Stores");
 }
 
 for my $code (@{$config->{codes}}) {
