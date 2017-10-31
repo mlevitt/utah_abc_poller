@@ -10,28 +10,27 @@ use Getopt::Long;
 use HTML::Template;
 
 my $opts = {};
-GetOptions(
-    $opts,
-    'quiet|q',
-    'header|h',
-    'debug|d',
-    'html|w',
-    'exclude_club_stores',
-    'config|c=s'
-);
+GetOptions($opts,
+           'quiet|q',
+           'header|h',
+           'debug|d',
+           'html|w',
+           'exclude_club_stores',
+           'config|c=s'
+          );
 
-if(@ARGV || ! $opts->{'config'} || ! -e $opts->{'config'}) {
+if (@ARGV || !$opts->{'config'} || !-e $opts->{'config'}) {
     USAGE();
 }
 
-my $ua = Mojo::UserAgent->new();
-my $config = YAML::LoadFile($opts->{'config'});
-my $html = '';
+my $ua       = Mojo::UserAgent->new();
+my $config   = YAML::LoadFile($opts->{'config'});
+my $html     = '';
 my $template = HTML::Template->new(filename => 'html-template.tmpl');
 
-my $tx= $ua->get($config->{url});
+my $tx = $ua->get($config->{url});
 
-if(!$tx->success) {
+if (!$tx->success) {
     my $err = $tx->error;
     die "$err->{code} response: $err->{message}" if $err->{code};
     die "Connection error: $err->{message}";
@@ -57,11 +56,11 @@ if ($opts->{'header'}) {
 }
 
 for my $code (@{$config->{codes}}) {
-    $code =~ s/\s*#.*//;  # Remove mid line comnents from the codes
+    $code =~ s/\s*#.*//;    # Remove mid line comnents from the codes
     $names{'ctl00$ContentPlaceHolderBody$tbCscCode'} = $code;
     $tx = $ua->post($config->{url} => form => \%names);
 
-    say $tx->success->body if($opts->{debug});
+    say $tx->success->body if ($opts->{debug});
 
     $dom = $tx->res->dom;
 
@@ -75,28 +74,30 @@ for my $code (@{$config->{codes}}) {
     my $qty = 0;
     my @stores;
     for my $row (@$rows) {
-        my $store = $row->child_nodes->[2]->all_text . ', ' . $row->child_nodes->[4]->all_text . ', ' . $row->child_nodes->[5]->all_text;
-        next if($opts->{'exclude_club_stores'} && $store =~ /Club Store/i);
+        my $store =
+            $row->child_nodes->[2]->all_text . ', '
+          . $row->child_nodes->[4]->all_text . ', '
+          . $row->child_nodes->[5]->all_text;
+        next if ($opts->{'exclude_club_stores'} && $store =~ /Club Store/i);
         $qty += $row->at('span')->all_text;
         push(@stores, $store);
     }
 
     if ($opts->{'html'}) {
         my $stores_str = join('<br>', @stores);
-        $html .= "<tr><td>$alcohol_name</td><td>$code</td><td>$qty</td><td>$stores_str</td></tr>"; 
+        $html .= "<tr><td>$alcohol_name</td><td>$code</td><td>$qty</td><td>$stores_str</td></tr>";
     } else {
         my $stores_str = join(' | ', @stores);
-        say "$alcohol_name - $code - $qty - $stores_str" if($qty || !$opts->{'quiet'});
+        say "$alcohol_name - $code - $qty - $stores_str" if ($qty || !$opts->{'quiet'});
     }
 }
 
 if ($opts->{'html'}) {
-    $template->param(STORES => $html); 
+    $template->param(STORES => $html);
     say $template->output;
 }
 
 sub USAGE {
     die "USAGE: $0 --config </path/to/configfile.yml> [--quiet] [--debug] [--exclude_club_stores]";
 }
-
 
