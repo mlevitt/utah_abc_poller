@@ -10,7 +10,14 @@ use Getopt::Long;
 use HTML::Template;
 
 my $opts = {};
-GetOptions($opts, 'quiet|q', 'header|h', 'debug|d', 'html|w', 'exclude_club_stores', 'config|c=s');
+GetOptions($opts,
+           'quiet|q',
+           'header|h',
+           'debug|d',
+           'html|w',
+           'exclude_club_stores',
+           'config|c=s'
+          );
 
 if (@ARGV || !$opts->{'config'} || !-e $opts->{'config'}) {
     USAGE();
@@ -90,8 +97,7 @@ if ($opts->{'html'}) {
     say $template->output;
 }
 
-sub USAGE
-{
+sub USAGE {
     die "USAGE: $0 --config </path/to/configfile.yml> [--quiet] [--debug] [--exclude_club_stores]";
 }
 
