@@ -7,7 +7,6 @@ use Mojo::UserAgent::Transactor;
 use Mojo::DOM;
 use YAML;
 use Getopt::Long;
-use HTML::Template;
 
 my $opts = {};
 GetOptions($opts,
@@ -16,17 +15,21 @@ GetOptions($opts,
            'debug|d',
            'html|w',
            'exclude_club_stores',
-           'config|c=s'
+           'config_dir|c=s',
+           'template|t=s',
           );
 
-if (@ARGV || !$opts->{'config'} || !-e $opts->{'config'}) {
+my $config_dir = $opts->{'config_dir'};
+my $config_file = "$config_dir/utah_abc_poller.yml";
+my $template_file = "$config_dir/html-template.tmpl";
+
+if (@ARGV || ! $config_dir || !-e $config_dir || !-e $config_file) {
     USAGE();
 }
 
 my $ua       = Mojo::UserAgent->new();
-my $config   = YAML::LoadFile($opts->{'config'});
+my $config   = YAML::LoadFile($config_file);
 my $html     = '';
-my $template = HTML::Template->new(filename => 'html-template.tmpl');
 
 my $tx = $ua->get($config->{url});
 
@@ -36,7 +39,7 @@ if (!$tx->success) {
     die "Connection error: $err->{message}";
 }
 
-#say $tx->success->body;
+say $tx->success->body if($opts->{debug});
 
 my $dom = $tx->res->dom;
 
@@ -93,7 +96,11 @@ for my $code (@{$config->{codes}}) {
 }
 
 if ($opts->{'html'}) {
+    require HTML::Template;
+    import HTML::Template;
+    my $template = HTML::Template->new(filename => $template_file);
     $template->param(STORES => $html);
+    say "Content-Type: text/html";
     say $template->output;
 }
 
