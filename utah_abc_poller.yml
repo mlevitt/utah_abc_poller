@@ -1,27 +1,30 @@
 url: https://webapps2.abc.utah.gov/Production/OnlineInventoryQuery/IQ/InventoryQuery.aspx
 codes:
-  - 920561
-  - 021540
-  - 018416
-  - 020146
-  - 021906
-  - 020150
-  - 021016
-  - 021030
-  - 021986
-  - 017923
-  - 017925
-  - 018361
-  - 005437
-  - 021602
-  - 021589
-  - 021603
-  - 021605
-  - 021600
-  - 016850
-  - 027879
-  - 027529
-  - 027228
-  - 017756
-  - 022086
-   
+  - 020146 # Pappy 10
+  - 021906 # Pappy 12
+  - 020150 # Pappy 15
+  - 021016 # Pappy 20
+  - 021030 # Pappy 23
+  - 920561 # Four Roses Single
+  - 018416 # George T Stagg
+  - 021986 # Weller Special Res 90PR
+  - 017923 # Elijah Craig 21
+  - 017925 # Elijah Craig 23
+  #- 017914 # Elijah Craig Barrel Proof
+  - 017920 # Elijah Craig 18 SINGLE BARREL
+  - 018361 # Four Roses LTD SB 
+  - 005437 # Laphroaig 18
+  - 021605 # EH Taylor 4 grain
+  - 027529 # Parker 27 yr
+  - 027534 # Parker mashbil
+  - 027228 # Parker Single
+  - 022086 # William Larue Weller
+  - 017756 # Eagle Rare 17 yr
+  - 027096 # Sazerac Rye 18 YR
+  - 027036 # Thomas Handy Rye
+  #- 027041 # High West Midwinter Nights Dram
+  #- 021540 # Stagg Jr
+  - 016850 # Blanton Single Barrel
+  - 021279 # Rock Hill
+  - 000606 # Old Forester Birthday
+  #- 918954 # Goose Island Bourbon County Stout
