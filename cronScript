@@ -1,0 +1,28 @@
+#!/bin/bash -eu
+usage() { 
+	echo "Usage: $0 [-s]" 1>&2
+	exit 1
+}
+
+slow=''
+while getopts "s" optionen; do
+    case "${optionen}" in
+        s) slow='-r' ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND-1))
+
+name=${1:-blanton}
+./utah_abc_poller.pl $slow -y $name > $name.current
+mkdir -p log/
+touch $name
+cp $name $name.prior
+diff -q $name.prior $name.current && exit
+diff -y -W 180 $name.prior $name.current | tee -a log/$name
+date >> log/$name
+
+
+say Time to checkout the d a b c for $name || true
+
+cp $name.current $name

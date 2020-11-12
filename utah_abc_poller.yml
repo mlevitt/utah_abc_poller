@@ -1,27 +1,123 @@
-url: https://webapps2.abc.utah.gov/Production/OnlineInventoryQuery/IQ/InventoryQuery.aspx
+url: https://webapps2.abc.utah.gov/ProdApps/ProductLocator/IQ/InventoryQuery.aspx
 codes:
-  - 020146 # Pappy 10
-  - 021906 # Pappy 12
-  - 020150 # Pappy 15
-  - 021016 # Pappy 20
-  - 021030 # Pappy 23
-  - 920561 # Four Roses Single
-  - 018416 # George T Stagg
-  - 021986 # Weller Special Res 90PR
-  - 017923 # Elijah Craig 21
-  - 017925 # Elijah Craig 23
-  - 018361 # Four Roses LTD SB 
-  - 005437 # Laphroaig 18
-  - 021605 # EH Taylor 4 grain
-  - 027529 # Parker 27 yr
-  - 027534 # Parker mashbil
-  - 027228 # Parker Single
-  - 022086 # William Larue Weller
-  - 017756 # Eagle Rare 17 yr
-  - 027096 # Sazerac Rye 18 YR
-  - 027036 # Thomas Handy Rye
-  - 027041 # High West Midwinter Nights Dram
-  #- 021540 # Stagg Jr
-  - 016850 # Blanton Single Barrel
-  - 021279 # Rock Hill
-  - 000606 # Old Forester Birthday
+  - 004077 # Aviation with glasses
+  - 016582 # BAKERS 13 YR BOURBON 750ml
+  - 086576 # BARRELL BOURBON DOVETAIL 750ml
+  - 016664 # BARRELL BOURBON SINGLE BARREL BOURB750ml
+  - 026993 # BARRELL BOURBON SINGLE BARREL RYE 750ml
+  - 016850 # Blanton
+  - 016841 # Blanton Gold
+  - 087010 # BLOOD OATH WHISKEY PACT V
+  - 920451 # BOLS GENEVER BARREL AGED 1000ml
+  - 920996 # BYRRH GRAND QUINQUINA 750ml
+  - 004763 # CAOL ILA 15Y 750ml
+  - 004761 # CAOL ILA 18Y 750ml
+  - 004600 # CAOL ILA 35Y 750ml
+  - 064799 # Creme Yvette
+  - 088935 # DON JULIO REPO DOUBLE CASK
+  - 088477 # DON JULIO REPOSADO DBL CSK LAGAVUL 750ml
+  - 021600 # EH Taylor barrell proof
+  - 021605 # EH Taylor four grain
+  - 021603 # EH Taylor Seasoned Wood
+  - 021602 # EH Taylor small batch
+  - 017913 # Elija Craig Toasted Barrel (sweet?)
+  - 018351 # FOUR ROSES BOURBON YELLOW LABEL
+  - 018361 # FOUR ROSES LTD EDITION SB 750ml
+  - 018350 # FOUR ROSES SINGLE BARREL BOURBON
+  - 018348 # FOUR ROSES SMALL BATCH BOURBON
+  - 065156 # Grand Marnier Louis Alexander
+  - 026772 # Kentucky Owl
+  - 019243 # KNOB CREEK 15 YR 750ml
+  - 019241 # KNOB CREEK QUARTER CASK
+  - 018860 # Larceny Barrel Proof
+  - 086582 # LEGENT STRAIGHT BOURBON 750ml
+  - 024574 # Little Book
+  - 100901 # Old Elk vap
+  - 016372 # OLD FITZGERALD 9 YR DECANTER BIB
+  - 016375 # OLD FITZGERALD 14 YR DECANTER BIB
+  - 016371 # OLD FITZGERALD 15 YR DECANTER BIB
+  - 020374 # Old Forester 1910
+  - 101052 # Old Forester Amber 150
+  - 020376 # Old Forester Prohibition
+  - 026913 # OLD FORESTER RYE 750ml
+  - 020380 # Old Forester Single Barrel Proof
+  - 018326 # Orphan barrel
+  - 027835 # Orphan Barrel
+  - 021231 # ORPHAN BARREL RHETHORIC 23 YR
+  - 021233 # ORPHAN BARREL RHETORIC 24YR
+  - 027224 # PARKER'S COGNAC BARREL 10YR
+  - 027525 # PARKER'S HERITAGE CASK 10YR
+  - 027534 # PARKER'S HERITAGE MASHBIL
+  - 027221 # Parkers 
+  - 028196 # Parkers Curacao
+  - 026617 # Parkers Heavy Char Rye
+  - 021234 # RHETORIC 25 YR 
+  - 016862 # TH BOURBON PACT # 2
+  - 022226 # Woodford Maplewood
+  - 022222 # WOODFORD MASTERS BRANDY FINISH
+  - 022230 # WOODFORD MASTERS CLASSIC
+  - 022240 # WOODFORD MASTERS SMOKED CHERRY MAL
+  - 022231 # WOODFORD MASTERS STRAIGHT
+  - 022228 # WOODFORD RES DOUBLE OAKED 750ml
+  - 022225 # WOODFORD RESERVE FOURWOOD
+  - 952890 # WYOMING WHISKEY OUTRYDER 750ml
+  - 022258 # YELLOWSTONE LTD EDITION 2019
+  - 022250 # YELLOWSTONE LTD EDITION BOURBON
+watch:
+  - 016906 # BOOKERS BOURBON
+  - 100618 # Crystal Head with shot glasses
+  - 028905 # THE BOTANIST GIN 750m
+  - 098490 # CARPANO ANTICA FORMULA VERMOUTH 1000ml
+  - 003891 # St Germain Gift
+  - 100430 # St Germain Gift
+  - 019017 # JEFFERSON'S OCEAN AGED BOURBON
+  - 005745 # GLENFIDDICH FIRE & CANE SCOTCH
+  - 004788 # CAOL ILA 12Y 750ml
+
+reserve:
+  - 000612 # Birthday Bourbon
+  - 100736
+  - 018416
+  - 022044 # WL Weller
+  - 022046 # WL Weller Barrell Proof
+  - 020146
+  - 021906
+  - 017900 # EH Taylor marriage
+  - 017756
+  - 022086
+  - 017943
+blanton:
+  - 016850  # BLANTON BOURBON SNGL BRRL          750ml
+  - 016841  # Blanton Gold
+  - 016809  # BLANTON STRAIGHT FROM THE BARREL BO
+short:
+  - 016664  # BARRELL BOURBON SINGLE BARREL BOURB
+  - 016850  # BLANTON BOURBON SNGL BRRL
+  - 016841  # Blanton Gold
+  - 016809  # BLANTON STRAIGHT FROM THE BARREL BO
+  - 021602  # E H TAYLOR SMALL BATCH
+  - 018350  # FOUR ROSES SINGLE BARREL BOURBON
+  - 065156  # GRAND MARNIER LOUIS ALEXANDER
+  - 027118  # HIGH WEST ROCKY MOUNTAIN RYE 16YR
+  - 018860  # LARCENY BARREL PROOF
+  - 086582  # LEGENT STRAIGHT BOURBON
+  - 100901  # OLD ELK BLENDED BOURBON VAP
+  - 101052  # OLD FORESTER AMBER 150 BATCH PROOF
+  - 020380  # OLD FORESTER SINGLE BARREL PROOF
+  - 022026  # W L WELLER 12 YR
+jack:
+  - 026906 # Jack Daniels Single Barrell
+  - 000367 # Jack Daniels Barrell Proof
+  - 000881 # JD with glasses
+  - 100375 # JD with glasses
+  - 000893 # Gentleman Jack with glasses
+  - 000962 # Jack single barrell with glasses
+  - 100714 # Jack with rocks
+  - 100137 # Jack with rocks
+  - 000470
+  - 000498
+  - 100746
+  - 100417
+  - 000890
+  - 100148
+  - 100136
