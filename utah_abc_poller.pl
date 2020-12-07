@@ -15,6 +15,7 @@ GetOptions($opts,
            'config_dir|c=s',
            'debug|d',
            'exclude_club_stores',
+           'local_stores',
            'header|h',
            'quiet|q',
            'random|r',
@@ -75,7 +76,16 @@ my @codes = (@{$config->{$myYamlTag}});
 for my $code (@codes) {
     $code =~ s/\s*#.*//;    # Remove mid line comnents from the codes
     $names{'ctl00$ContentPlaceHolderBody$tbCscCode'} = $code;
-    $tx = $ua->post($config->{url} => form => \%names);
+    my $tries = 0;
+    while ($tries < 5) {
+	    $tries = $tries + 1;
+	    $tx = $ua->post($config->{url} => form => \%names);
+	    last if (! $tx->error);
+	    my $err = $tx->error;
+	    warn "$err->{code} response: $err->{message}" if $err->{code};
+	    warn "Connection error: $err->{message}";
+	    sleep(5);
+    } 
 
     say $tx->success->body if ($opts->{debug});
 
@@ -101,7 +111,19 @@ for my $code (@codes) {
     my $alcohol_price = '';
     if ($dom->at('#ContentPlaceHolderBody_lblPrice')) {
         $alcohol_price = $dom->at('#ContentPlaceHolderBody_lblPrice')->all_text;
-	say "On order is $alcohol_price"if ($opts->{debug});
+	say "Price is $alcohol_price"if ($opts->{debug});
+    }
+
+    my $status = '';
+    if ($dom->at('#ContentPlaceHolderBody_lblPrice')) {
+        $status = $dom->at('#ContentPlaceHolderBody_lblStatusMessage')->all_text;
+	say "Status is $status"if ($opts->{debug});
+    }
+
+    my $extra = '';
+    if ($dom->at('#ContentPlaceHolderBody_lblPrice')) {
+        $extra = $dom->at('#ContentPlaceHolderBody_lblStatus')->all_text;
+	say "extra is $extra"if ($opts->{debug});
     }
 
     my $rows = $dom->find('tr.gridViewRow');
@@ -112,6 +134,7 @@ for my $code (@codes) {
 	    say "Here's a row :\n$row\n" if ($opts->{debug});
             my $col = trim($row->child_nodes->[1]->all_text); say "Column 1 $col" if ($opts->{debug});
                $col = trim($row->child_nodes->[2]->all_text); say "Column 2 $col" if ($opts->{debug});
+            my $thiscity = trim($row->child_nodes->[5]->all_text); say "Column 5 $thiscity" if ($opts->{debug});
             my $thisqty = trim($row->child_nodes->[3]->all_text); say "Column 3 $thisqty" if ($opts->{debug});
                $col = trim($row->child_nodes->[4]->all_text); say "Column 4 $col" if ($opts->{debug});
                $col = trim($row->child_nodes->[5]->all_text); say "Column 5 $col" if ($opts->{debug});
@@ -119,19 +142,22 @@ for my $code (@codes) {
             $thisqty . ', '
           . trim($row->child_nodes->[2]->all_text) . ', '
           . trim($row->child_nodes->[4]->all_text) . ', '
-          . $thisqty;
+	  . $thiscity;
         next if ($opts->{'exclude_club_stores'} && $store =~ /Club Store/i);
+        next if ($opts->{'local_stores'} && $thiscity !~ /(Bountiful|Roy|Taylorsville|Layton|Riverton|Saratoga|Herriman|Salt Lake|Syracuse|Sandy|West Valley)/i);
         $qty += $thisqty;
         push(@stores, $store);
     }
 
     if ($opts->{'html'}) {
         my $stores_str = join('<br>', @stores);
-        $html .= "<tr><td>$alcohol_name</td><td>$code</td><td>$alcohol_price</td><td>$alcohol_inventory</td><td>$alcohol_onOrder</td><td>$qty</td><td>$stores_str</td></tr>";
+        $html .= "<tr><td>$alcohol_name</td><td>$code</td><td>$alcohol_price</td><td>i$status</td><td>$alcohol_inventory</td><td>$alcohol_onOrder</td><td>$qty</td><td>$stores_str</td></tr>";
     } else {
         my $stores_str = join("\n| ", @stores);
         my $split = ''; $split = "\n| " if ($stores_str);
-        say "$alcohol_name - $alcohol_price - $code - $qty -- $alcohol_inventory -- $alcohol_onOrder$split$stores_str" if ($qty || !$opts->{'quiet'});
+	# my $more = ''; $more = $status . '|' . $extra if ($status);
+	my $more = $status;
+        say "$alcohol_name - $alcohol_price - $code - $more - $qty -- $alcohol_inventory -- $alcohol_onOrder$split$stores_str" if ($qty || !$opts->{'quiet'});
     }
     my $sleep_time = int(rand(50)) + 10;
     sleep($sleep_time) if $opts->{'random'};

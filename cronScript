@@ -5,24 +5,37 @@ usage() {
 }
 
 slow=''
-while getopts "s" optionen; do
+local=''
+while getopts "ls" optionen; do
     case "${optionen}" in
+        l) local='-local_stores' ;;
         s) slow='-r' ;;
         *) usage ;;
     esac
 done
+delay=200
 shift $((OPTIND-1))
-
+thisDir=$(dirname $0)
+cd $thisDir
 name=${1:-blanton}
-./utah_abc_poller.pl $slow -y $name > $name.current
+./utah_abc_poller.pl $local $slow -y $name > $name.current
 mkdir -p log/
 touch $name
 cp $name $name.prior
-diff -q $name.prior $name.current && exit
-diff -y -W 180 $name.prior $name.current | tee -a log/$name
+
+diff -q $name.prior $name.current > /dev/null && exit $delay
+while true
+do
+	python -c 'import sys,Quartz; d=Quartz.CGSessionCopyCurrentDictionary(); print d' | grep -qi lock || break
+	sleep 10
+	delay=20
+done
+
+diff -y -W 220 $name.prior $name.current | tee -a log/$name
 date >> log/$name
 
 
-say Time to checkout the d a b c for $name || true
+say $name || true
 
 cp $name.current $name
+exit $delay
