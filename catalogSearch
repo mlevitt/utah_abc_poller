@@ -1,0 +1,53 @@
+#!/bin/bash -eu
+function usage() { 
+	echo "Usage: $0 [-s]" 1>&2
+	exit 1
+}
+function join { local IFS="$1"; shift; echo "$*"; }
+slow=''
+limit=15
+filter=""
+while getopts "f:l:sv:x" optionen; do
+    case "${optionen}" in
+        f) filter=$OPTARG ;;
+        l) limit=$OPTARG ;;
+        s) slow='-r' ;;
+	x) set -x;;
+        *) usage ;;
+    esac
+done
+delay=200
+shift $((OPTIND-1))
+thisDir=$(dirname $0)
+cd $thisDir
+name=$(join ' ' ${@:-blanton})
+mkdir -p catalogHistory/
+getItems="https://webapps2.abc.utah.gov/ProdApps/ProductLocator/Services/AutoCompleteService.asmx/GETITEMS"
+data="{\"prefixText\":\"$name\",\"count\":$limit,\"contextKey\":null}"
+name=`echo $name | tr ' ' '_'`
+
+curl -sX POST -H "Content-Type: application/json" --data  "$(join " " $data)" $getItems | \
+ 	jq '.d[]' | \
+ 	awk -F\" '{print "  - " $9 "# " $5}' | \
+ 	perl -pe "s|u0027|'|g; s|\s*\d+\s?ml||; s|\\\#| #|; s|\\\||g" > catalogHistory/$name.unfiltered
+
+[[ `wc -l catalogHistory/$name.unfiltered | awk '{print $1}'` -eq $limit ]] && \
+	echo warning: search for "$data" returned max
+
+egrep -i "$filter"   catalogHistory/$name.unfiltered > catalogHistory/$name.current
+
+touch catalogHistory/$name
+cp catalogHistory/$name catalogHistory/$name.prior
+
+diff -q catalogHistory/$name.prior catalogHistory/$name.current > /dev/null && exit $delay
+while true
+do
+	python -c 'import sys,Quartz; d=Quartz.CGSessionCopyCurrentDictionary(); print d' | grep -qi lock || break
+	sleep 10
+	delay=20
+done
+
+diff -y -W 220 catalogHistory/$name.prior catalogHistory/$name.current | tee -a log/$name-inventory
+date >> log/$name-inventory
+cp catalogHistory/$name.current catalogHistory/$name
+exit $delay

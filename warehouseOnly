@@ -1,0 +1,2 @@
+#!/bin/bash -e
+cat pollingData/codes | grep -v \| | grep -v -- '-- 0 --' | grep -- ' - 0 --'

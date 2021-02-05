@@ -143,9 +143,9 @@ for my $code (@codes) {
           . trim($row->child_nodes->[2]->all_text) . ', '
           . trim($row->child_nodes->[4]->all_text) . ', '
 	  . $thiscity;
-        next if ($opts->{'exclude_club_stores'} && $store =~ /Club Store/i);
-        next if ($opts->{'local_stores'} && $thiscity !~ /(Bountiful|Roy|Taylorsville|Layton|Riverton|Saratoga|Herriman|Salt Lake|Syracuse|Sandy|West Valley)/i);
         $qty += $thisqty;
+        next if ($opts->{'exclude_club_stores'} && $store =~ /Club Store/i);
+        next if ($opts->{'local_stores'} && $thiscity !~ /(Bountiful|Roy|Taylorsville|Layton|Riverton|Saratoga|Herriman|Salt Lake|Syracuse|Sandy|West Valley|Farmington|Pleasant)/i);
         push(@stores, $store);
     }
 

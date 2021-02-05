@@ -1,1 +1,5 @@
 *.swp
+catalogHistory
+log
+pollingData
+interesting.yml

@@ -18,24 +18,34 @@ shift $((OPTIND-1))
 thisDir=$(dirname $0)
 cd $thisDir
 name=${1:-blanton}
-./utah_abc_poller.pl $local $slow -y $name > $name.current
+./utah_abc_poller.pl $local $slow -y $name > pollingData/$name.current
 mkdir -p log/
-touch $name
-cp $name $name.prior
+touch pollingData/$name
+cp pollingData/$name pollingData/$name.prior
 
-diff -q $name.prior $name.current > /dev/null && exit $delay
 while true
 do
 	python -c 'import sys,Quartz; d=Quartz.CGSessionCopyCurrentDictionary(); print d' | grep -qi lock || break
 	sleep 10
-	delay=20
+	delay=5
+	echo -n .x
+done
+diff -q pollingData/$name.prior pollingData/$name.current > /dev/null && while :; do
+currenttime=$(date +%H:%M)
+	if [[ "$currenttime" > "20:00" ]] || [[ "$currenttime" < "09:30" ]]; then
+		sleep 200
+		echo -n .z
+	else
+		exit $delay
+	fi
 done
 
-diff -y -W 220 $name.prior $name.current | tee -a log/$name
+diff -y -W 220 pollingData/$name.prior pollingData/$name.current | tee -a log/$name
 date >> log/$name
 
 
 say $name || true
 
-cp $name.current $name
+cp pollingData/$name.current pollingData/$name
+
 exit $delay

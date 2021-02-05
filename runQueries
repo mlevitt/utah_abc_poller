@@ -1,0 +1,11 @@
+#!/bin/bash -eu
+function usage() { 
+	echo "Usage: $0 [-s]" 1>&2
+	exit 1
+}
+
+cat queries | while read l
+do
+	./catalogSearch  $l || true
+	sleep 10
+done
